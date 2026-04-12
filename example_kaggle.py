@@ -31,7 +31,7 @@ import time
 
 from ml_module.job_recommendation_kaggle import JobRecommendationSystem, display_recommendations
 from ml_module.kaggle_adapter import KaggleDatasetAdapter
-from ml_module.visualization_kaggle import VisualizationEngine
+from ml_module.kaggle_visualization import VisualizationEngine
 
 
 # ============================================================================

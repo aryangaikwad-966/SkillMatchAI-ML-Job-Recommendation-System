@@ -161,7 +161,7 @@ class JobRecommendationSystem:
         return text
     
     # ==================== VECTORIZATION ====================
-    def vectorize_data(self, min_df=1, max_df=0.95, max_features=1500):
+    def vectorize_data(self, min_df=1, max_df=0.95, max_features=3000):
         """
         Apply TF-IDF vectorization to the corpus.
         
@@ -177,15 +177,18 @@ class JobRecommendationSystem:
         print(f"  - min_df: {min_df}")
         print(f"  - max_df: {max_df}")
         print(f"  - max_features: {max_features}")
+        print(f"  - ngram_range: (1, 2) [unigrams + bigrams]")
         
         # Preprocess corpus
         processed_corpus = [self.preprocess_text(doc) for doc in self.jobs_corpus]
         
-        # Create vectorizer
+        # Create vectorizer with bigram support for multi-word skills
+        # e.g. "machine learning", "data analysis", "supply chain"
         self.vectorizer = TfidfVectorizer(
             min_df=min_df,
             max_df=max_df,
             max_features=max_features,
+            ngram_range=(1, 2),
             stop_words='english'
         )
         
@@ -215,11 +218,19 @@ class JobRecommendationSystem:
                     'company': str,
                     'location': str,
                     'similarity_score': float,
-                    'matched_skills': str (if explain=True)
+                    'matched_skills': list (if explain=True),
+                    'skill_overlap_pct': float (if explain=True)
                 }
         """
         if self.vectorizer is None or self.job_vectors is None:
             raise ValueError("System not trained. Call vectorize_data() first.")
+        
+        # Input validation
+        if not user_input or not user_input.strip():
+            raise ValueError("User input cannot be empty. Provide comma-separated skills.")
+        
+        # Clamp top_k to dataset size
+        top_k = min(top_k, len(self.jobs_data))
         
         # Preprocess user input
         processed_input = self.preprocess_text(user_input)
@@ -232,6 +243,16 @@ class JobRecommendationSystem:
         
         # Get top-K indices
         top_indices = np.argsort(similarities)[::-1][:top_k]
+        
+        # Warn if best score is very low
+        best_score = float(similarities[top_indices[0]])
+        if best_score < 0.05:
+            print(f"⚠️  Warning: Best match score is very low ({best_score:.4f}).")
+            print(f"   Your skills may not be well represented in the dataset.")
+            print(f"   Try more specific or different skill terms.")
+        
+        # Parse user skills by comma (preserving multi-word skills)
+        user_skills_set = set(s.strip().lower() for s in user_input.split(',') if s.strip())
         
         # Build recommendations list
         recommendations = []
@@ -249,10 +270,26 @@ class JobRecommendationSystem:
             # Add matched skills if requested
             if explain:
                 job_skills = self.jobs_data.loc[idx, 'required_skills']
-                user_skills_set = set(s.strip().lower() for s in processed_input.split() if s.strip())
+                # Split job skills by comma (same format as user input)
                 job_skills_set = set(s.strip().lower() for s in str(job_skills).split(',') if s.strip())
-                matched = job_skills_set & user_skills_set
-                job_info['matched_skills'] = list(matched) if matched else []
+                
+                # Find exact matches (multi-word aware)
+                matched = user_skills_set & job_skills_set
+                
+                # Also find partial/substring matches for flexibility
+                # e.g. user says "python" and job has "python programming"
+                for user_skill in user_skills_set:
+                    for job_skill in job_skills_set:
+                        if user_skill in job_skill or job_skill in user_skill:
+                            matched.add(job_skill)
+                
+                job_info['matched_skills'] = sorted(list(matched)) if matched else []
+                
+                # Skill overlap percentage
+                if user_skills_set:
+                    job_info['skill_overlap_pct'] = len(matched) / len(user_skills_set) * 100
+                else:
+                    job_info['skill_overlap_pct'] = 0.0
             
             recommendations.append(job_info)
         
@@ -362,7 +399,8 @@ def display_recommendations(recommendations, show_matched_skills=True):
     print("="*100)
     
     for rank, rec in enumerate(recommendations, 1):
-        print(f"\n[{rank}] {rec['job_title']} | Score: {rec['similarity_score']:.3f}")
+        overlap_str = f" | Skill Match: {rec['skill_overlap_pct']:.0f}%" if 'skill_overlap_pct' in rec else ""
+        print(f"\n[{rank}] {rec['job_title']} | Score: {rec['similarity_score']:.3f}{overlap_str}")
         print(f"    Company: {rec.get('company', 'N/A')}")
         print(f"    Location: {rec.get('location', 'N/A')}")
         print(f"    Industry: {rec.get('industry', 'N/A')}")
@@ -370,5 +408,7 @@ def display_recommendations(recommendations, show_matched_skills=True):
         
         if show_matched_skills and rec.get('matched_skills'):
             print(f"    ✓ Matched Skills: {', '.join(rec['matched_skills'])}")
+        elif show_matched_skills:
+            print(f"    ✗ No direct skill keyword matches (similarity is based on TF-IDF context)")
     
     print("\n" + "="*100)
