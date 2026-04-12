@@ -27,8 +27,9 @@ from .kaggle_adapter import KaggleDatasetAdapter, load_and_adapt_kaggle_dataset
 from .job_recommendation_kaggle import JobRecommendationSystem
 from .evaluation_kaggle import EvaluationMetrics, TestCaseManager, EvaluationAnalyzer
 from .visualization_kaggle import VisualizationEngine
+from .gemma_recommender import GemmaRecommender
 
-__version__ = "2.0.0"  # Kaggle-focused
+__version__ = "3.0.0"  # Gemma 3 AI-enhanced
 __author__ = "AI Assistant & ML Engineer"
 
 __all__ = [
@@ -39,5 +40,7 @@ __all__ = [
     'EvaluationAnalyzer',
     'VisualizationEngine',
     'KaggleDatasetAdapter',
-    'load_and_adapt_kaggle_dataset'
+    'load_and_adapt_kaggle_dataset',
+    # Gemma 3 AI
+    'GemmaRecommender',
 ]
