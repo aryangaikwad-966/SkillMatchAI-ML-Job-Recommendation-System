@@ -1,19 +1,19 @@
-# Kaggle Job Recommendation System
+# SkillMatch AI
 
-A production-grade **complete ML pipeline** for job recommendations using:
+**SkillMatch AI** is a complete machine-learning pipeline that recommends jobs from a user's skills using:
 - **TF-IDF vectorization** for text feature extraction
 - **Cosine similarity** for job-skill matching
-- **Real Kaggle dataset** (50,000 actual job postings)
+- **Kaggle's AI-Powered Job Recommendations Dataset** (50,000 job postings)
 - **Automatic evaluation** with quality metrics
 - **Professional visualizations** (3 publication-quality graphs)
 
-Everything runs end-to-end with a single command, with only user input required. Perfect for demos, presentations, and academic submissions.
+Everything runs end-to-end with a single command. The system is content-based, so it does not require user history or an external API.
 
 ## 🚀 Quick Start
 
 ### 1. Navigate to Backend Directory
 ```bash
-cd ~/Desktop/'AIDS\ ML\ Project'/Backend
+cd ~/Desktop/'Job Prediction System'/Backend
 ```
 
 ### 2. Run the Complete Pipeline
@@ -36,7 +36,7 @@ When prompted, type your skills:
 The system automatically executes these 8 phases:
 
 ### **Phase 1: Load Dataset**
-- Loads 50,000 real job postings from Kaggle
+- Loads the local Kaggle CSV containing 50,000 job postings
 - Validates dataset structure and columns
 - Displays: total records, column names, shape
 
@@ -48,7 +48,7 @@ The system automatically executes these 8 phases:
 ### **Phase 3: Feature Engineering (TF-IDF)**
 - Creates text corpus from job titles and skills
 - Applies TF-IDF vectorization
-- Generates 552-dimensional feature space
+- Generates a TF-IDF feature space; the exact dimension is determined at runtime
 - Displays: document count, feature dimensions, sparsity
 
 ### **Phase 4: User Input** 
@@ -58,7 +58,7 @@ The system automatically executes these 8 phases:
 
 ### **Phase 5: Recommendation Generation**
 - Transforms user input using TF-IDF vectorizer
-- Computes cosine similarity with all 50K jobs
+- Computes cosine similarity with all available jobs
 - Returns top 5 ranked recommendations
 - Displays: job title, company, location, match score, matched skills
 
@@ -108,7 +108,7 @@ Graphs saved to: `graphs/` folder (300 DPI PNG)
 
 📊 Dataset Overview:
   • Total jobs analyzed: 50000
-  • Feature dimensions: 552
+  • Feature dimensions: determined by the fitted vectorizer
   • Best match percentile: 100.0%
 ```
 
@@ -118,12 +118,12 @@ Graphs saved to: `graphs/` folder (300 DPI PNG)
 
 ✅ **End-to-End Pipeline** - One command runs everything
 ✅ **User Input Only** - No predefined test cases
-✅ **Automatic Evaluation** - Quality metrics calculated on-the-fly
-✅ **Real Data** - 50,000 actual jobs from Kaggle
+✅ **Automatic Evaluation** - Similarity-based quality metrics calculated on-the-fly
+✅ **Kaggle Data** - 50,000 job postings from a real-world dataset
 ✅ **Professional Graphs** - 3 publication-quality visualizations
 ✅ **Fast Inference** - ~3-5ms per recommendation
 ✅ **Modular Code** - Clean, maintainable structure
-✅ **Academic Ready** - 8.5+/10 level quality
+✅ **Academic Ready** - Demonstrates a complete ML workflow
 
 ---
 
@@ -161,7 +161,7 @@ python3 example_kaggle.py
 |-----------|-----------|
 | **Vectorization** | TF-IDF (scikit-learn) |
 | **Similarity** | Cosine Similarity |
-| **Dataset** | Kaggle (50,000 jobs) |
+| **Dataset** | Kaggle AI-Powered Job Recommendations Dataset |
 | **Evaluation** | Custom metrics (similarity-based) |
 | **Visualization** | Matplotlib + Seaborn |
 | **Data Processing** | Pandas + NumPy |
@@ -249,7 +249,7 @@ Job corpus (50K jobs)
     ↓
 TF-IDF Vectorizer (max_features=1500)
     ↓
-552-dimensional vectors (sparse matrix)
+TF-IDF feature vectors (sparse matrix)
 ```
 
 ### 2. Similarity Matching
@@ -280,7 +280,7 @@ Quality interpretation
 
 ### For University Submission:
 - ✅ Complete end-to-end ML pipeline
-- ✅ Real dataset (50K jobs from Kaggle)
+- ✅ Kaggle dataset (50K job postings)
 - ✅ Proper data preprocessing
 - ✅ Feature engineering (TF-IDF)
 - ✅ Model training & inference
@@ -288,7 +288,9 @@ Quality interpretation
 - ✅ Professional visualizations
 - ✅ Detailed analysis & insights
 
-### Expected Grade: 8.5-9.5/10 (A+)
+### Evaluation Note
+
+The built-in evaluation measures similarity scores and ranking statistics. It does not replace a labeled ground-truth evaluation set.
 
 ---
 
@@ -300,7 +302,7 @@ FileNotFoundError: data/job_recommendation_dataset.csv
 ```
 **Solution:** Ensure you're in the Backend directory:
 ```bash
-cd ~/Desktop/'AIDS\ ML\ Project'/Backend
+cd ~/Desktop/'Job Prediction System'/Backend
 ls data/
 ```
 
@@ -361,8 +363,8 @@ When you run the pipeline:
 1. **TF-IDF Advantage:** Captures skill importance in job descriptions
 2. **Cosine Similarity:** Fast, interpretable, scales to large datasets
 3. **No User History Needed:** Pure content-based matching
-4. **Real Data:** 50,000 actual Kaggle jobs for realistic results
-5. **Automatic Evaluation:** Quality metrics without manual testing
+4. **Kaggle Data:** 50,000 job postings for realistic results
+5. **Automatic Evaluation:** Similarity-based quality metrics without manual labels
 
 ---
 
@@ -403,7 +405,7 @@ Code: Custom implementation using scikit-learn, pandas, matplotlib
 
 ---
 
-**Status:** ✅ Production Ready  
+**Project Name:** SkillMatch AI
+**Status:** ✅ Complete ML prototype
 **Version:** 1.0.0  
-**Last Updated:** April 12, 2026  
-**Quality Grade:** 8.5+/10 (A+)
+**Last Updated:** September 11, 2026
