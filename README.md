@@ -1,4 +1,4 @@
-# SkillMatch AI
+# SkillMatch — ML Job Recommendation Engine
 
 **SkillMatch AI** is a complete machine-learning pipeline that recommends jobs from a user's skills using:
 - **TF-IDF vectorization** for text feature extraction
